@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Detalles del Árbitro</title>
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container my-4">
+        <div class="card mb-3 shadow-sm">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <!-- Imagen con manejo de errores mejorado -->
+                    <div th:if="${arbitro.photoUrl != null and !#strings.isEmpty(arbitro.photoUrl) and !#strings.startsWith(arbitro.photoUrl, 'https://placehold')}">
+                        <img th:src="${arbitro.photoUrl}" 
+                             class="arbitro-image" 
+                             th:alt="${arbitro.nombre}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="image-placeholder" style="display: none;">
+                            <div class="text-center">
+                                <i class="fas fa-user fa-3x mb-2"></i>
+                                <div>Sin foto disponible</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Placeholder cuando no hay imagen -->
+                    <div th:unless="${arbitro.photoUrl != null and !#strings.isEmpty(arbitro.photoUrl) and !#strings.startsWith(arbitro.photoUrl, 'https://placehold')}" 
+                         class="image-placeholder">
+                        <div class="text-center">
+                            <i class="fas fa-user fa-3x mb-2"></i>
+                            <div>Sin foto disponible</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary mb-3" th:text="${arbitro.nombre}"></h4>
+                        
+                        <div class="info-row">
+                            <span class="info-label">ID:</span>
+                            <span class="badge bg-secondary" th:text="${arbitro.id}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Cédula:</span>
+                            <span th:text="${arbitro.cedula}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Teléfono:</span>
+                            <span th:text="${arbitro.phone}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Especialidad:</span>
+                            <span class="badge bg-info text-white" th:text="${arbitro.speciality}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Escala:</span>
+                            <span class="badge bg-success" th:text="${arbitro.scale}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Fechas de No Disponibilidad:</span>
+                            <div class="mt-2">
+                                <div th:if="${arbitro.unavailabilityDates != null and !#strings.isEmpty(arbitro.unavailabilityDates)}">
+                                    <span th:each="date, iterStat : ${#strings.arraySplit(arbitro.unavailabilityDates, ',')}" 
+                                          class="badge bg-danger me-1 mb-1" th:text="${#strings.trim(date)}"></span>
+                                </div>
+                                <div th:if="${arbitro.unavailabilityDates == null or #strings.isEmpty(arbitro.unavailabilityDates)}">
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>Siempre disponible
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2 mt-4">
+                            <a th:href="@{/arbitros}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+                            </a>
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete()" title="Eliminar árbitro">
+                                <i class="fas fa-trash-alt me-2"></i>Eliminar
+                            </button>
+                        </div>
+                        
+                        <!-- Formulario oculto para eliminar -->
+                        <form th:action="@{/arbitros/delete/{id}(id=${arbitro.id})}" method="post" id="deleteForm" style="display: none;">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete() {
+            const arbitroName = document.querySelector('h4.card-title').textContent.trim();
+            
+            if (confirm('¿Estás seguro de que deseas eliminar al árbitro "' + arbitroName + '"?\n\nEsta acción no se puede deshacer.')) {
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+
+</body>
+</html>
