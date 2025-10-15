@@ -1,0 +1,16 @@
+# Archivos a ignorar durante la construcción Docker
+.git
+.gitignore
+README.md
+.env
+.nyc_output
+coverage
+.idea
+.vscode
+target/
+!target/*.jar
+*.md
+.mvn/
+mvnw
+mvnw.cmd
+src/test/

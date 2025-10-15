@@ -1,0 +1,7 @@
+Para correr el proyecto:
+ - Se necesita java 21
+ - Se corrio en ubuntu linux desde la raiz en donde esta este archivo
+ 
+ Su corre con el comando: ./mvnw spring-boot:run
+ 
+ Hecho por Sebastian Andres Medina Cabezas
